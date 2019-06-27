@@ -6,6 +6,7 @@ import subprocess
 import shutil
 
 
+# Install required packages via yum
 def install_packages():
     package_list = ['python-pip',
                     'gcc',
@@ -27,6 +28,7 @@ def install_packages():
         print('Unsuccessful')
 
 
+# Install required packages via pip
 def pip_down():
     print('\nInstalling OpenStack HEAT requirements via pip')
     os_list = [ 'os-collect-config',
@@ -47,6 +49,7 @@ def pip_down():
         print('Unsuccessful')
 
 
+# Remove git repo if it exist & clone it down again
 def git_configuration():
     import git
     try:
@@ -57,11 +60,7 @@ def git_configuration():
     git.Git('./').clone('git://github.com/kmcjunk/hotstrap.git')
 
 
-def ensure_dir():
-    directory = os.path.dirname(file_path)
-    if not os.path.exists(directory):
-        os.makedirs(directory)
-
+# Move configuration files to the proper location on the OS
 def configurate():
     file_list = ['etc/os-collect-config.conf',
                   'opt/stack/os-config-refresh/configure.d/20-os-apply-config',
@@ -80,17 +79,8 @@ def configurate():
         shutil.move('hotstrap/' + file, '/' + file)
 
 
-
-# [ 'etc/os-collect-config.conf',
-# 'opt/stack/os-config-refresh/configure.d/20-os-apply-config',
-# 'opt/stack/os-config-refresh/configure.d/55-heat-config',
-# 'usr/bin/heat-config-notify',
-# 'usr/libexec/os-apply-config/templates/etc/os-collect-config.conf',
-# 'usr/libexec/os-apply-config/templates/var/run/heat-config/heat-config'
-# 'var/lib/heat-config/hooks/ansible',
-# 'var/lib/heat-config/hooks/script' ]
-
-
+# Run os-collect to propagate the config & run it again
+# Then run start_config to ensure everything is enabled properly
 def jiggle_some_things():
     print('\nRunning os-collect-config & ensuring os-collect-config-exist')
     os.system('os-collect-config --one-time --debug')
@@ -102,6 +92,7 @@ def jiggle_some_things():
     shutil.rmtree('hotstrap/')
 
 
+# Ensure we don't get rekt by cloud-init next boot
 def delete_some_other_things():
     print('Ensuring no cloud-init references exist')
     os.system('rm -rf /var/lib/cloud/instance')
