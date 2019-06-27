@@ -74,8 +74,6 @@ def configurate():
             os.makedirs(directory)
         print('hotstrap/' + file + '\t->\t' + '/' + file)
         shutil.move('hotstrap/' + file, '/' + file)
-    print('\nCleaning up git folder\n')
-    shutil.rmtree('hotstrap/')
 
 
 
@@ -90,11 +88,14 @@ def configurate():
 
 
 def jiggle_some_things():
-    print('Running os-collect-config & ensuring os-collect-config-exist')
+    print('\nRunning os-collect-config & ensuring os-collect-config-exist')
     os.system('os-collect-config --one-time --debug')
     os.system('cat /etc/os-collect-config.conf')
     os.system('os-collect-config --one-time --debug')
-    subprocess.call('/usr/bin/start_config_agent.sh')
+    print('\nEnsuring everything is running & enabled on boot')
+    subprocess.call('hotstrap/start_config_agent.sh')
+    print('\nCleaning up git folder\n')
+    shutil.rmtree('hotstrap/')
 
 
 def delete_some_things():
