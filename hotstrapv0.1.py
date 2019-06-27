@@ -21,7 +21,7 @@ def install_packages():
     try:
         for package in package_list:
             print('Installing + ' + package)
-            os.system('yum install -y ' + package)
+            os.system('yum install -y ' + package + '>/dev/null')
             print('Successful\n')
     except:
         print('Unsuccessful')
@@ -36,20 +36,20 @@ def pip_down():
                 'gitpython' ]
     try:
         print('Installing decorator')
-        os.system('pip install -U decorator')
+        os.system('pip install -U decorator >/dev/null')
         for package in os_list:
             print('Installing ' + package)
-            os.system('pip install ' + package)
+            os.system('pip install ' + package + '>/dev/null')
             print('Successful')
         print('Installing ansible')
-        os.system('pip install ansible==2.4.3.0')
+        os.system('pip install ansible==2.4.3.0 > /dev/null')
     except:
         print('Unsuccessful')
 
 
 def git_configuration():
     import git
-    print('Cloning down configuration files')
+    print('\nCloning down configuration files')
     git.Git('./').clone('git://github.com/kmcjunk/hotstrap.git')
 
 
@@ -67,13 +67,15 @@ def configurate():
                   'usr/libexec/os-apply-config/templates/var/run/heat-config/heat-config',
                   'var/lib/heat-config/hooks/ansible',
                   'var/lib/heat-config/hooks/script' ]
-    print('Moving configuration files to the proper locations')
+    print('\n\nMoving configuration files to the proper locations')
     for file in file_list:
         directory = os.path.dirname('/' + file)
         if not os.path.exists(directory):
             os.makedirs(directory)
-        print('hotstrap/' + file + '\t->' + '/' + file)
+        print('hotstrap/' + file + '\t->\t' + '/' + file)
         shutil.move('hotstrap/' + file, '/' + file)
+    print('\nCleaning up git folder\n')
+    shutil.rmtree('hotstrap/')
 
 
 
@@ -87,14 +89,15 @@ def configurate():
 # 'var/lib/heat-config/hooks/script' ]
 
 
-# def touch_some_things():
-#     os.system('os-collect-config --one-time --debug')
-#     os.system('cat /etc/os-collect-config.conf')
-#     os.system('os-collect-config --one-time --debug')
-#     os.system('pip install ansible==2.4.3.0')
+def jiggle_some_things():
+    print('Running os-collect-config & ensuring os-collect-config-exist')
+    os.system('os-collect-config --one-time --debug')
+    os.system('cat /etc/os-collect-config.conf')
+    os.system('os-collect-config --one-time --debug')
+    subprocess.call('/usr/bin/start_config_agent.sh')
 
 
-def delete_some_other_things():
+def delete_some_things():
     os.system('rm -rf /var/lib/cloud/instance')
     os.system('rm -rf /var/lib/cloud/instances/*')
     os.system('rm -rf /var/lib/cloud/data/*')
@@ -102,7 +105,9 @@ def delete_some_other_things():
     os.system('rm -rf /var/log/cloud-init.log')
     os.system('rm -rf /var/log/cloud-init-output.log')
 
-# install_packages()
-# pip_down()
+install_packages()
+pip_down()
 git_configuration()
 configurate()
+jiggle_some_things()
+delete_some_other_things()
