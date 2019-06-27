@@ -49,6 +49,10 @@ def pip_down():
 
 def git_configuration():
     import git
+    try:
+        shutil.rmtree('hotstrap/')
+    except OSError:
+        pass
     print('\nCloning down configuration files')
     git.Git('./').clone('git://github.com/kmcjunk/hotstrap.git')
 
@@ -67,7 +71,7 @@ def configurate():
                   'usr/libexec/os-apply-config/templates/var/run/heat-config/heat-config',
                   'var/lib/heat-config/hooks/ansible',
                   'var/lib/heat-config/hooks/script' ]
-    print('\n\nMoving configuration files to the proper locations')
+    print('Moving configuration files to the proper locations\n\n')
     for file in file_list:
         directory = os.path.dirname('/' + file)
         if not os.path.exists(directory):
@@ -94,17 +98,19 @@ def jiggle_some_things():
     os.system('os-collect-config --one-time --debug')
     print('\nEnsuring everything is running & enabled on boot')
     subprocess.call('hotstrap/start_config_agent.sh')
-    print('\nCleaning up git folder\n')
+    print('\nCleaning up git folder')
     shutil.rmtree('hotstrap/')
 
 
-def delete_some_things():
+def delete_some_other_things():
+    print('Ensuring no cloud-init references exist')
     os.system('rm -rf /var/lib/cloud/instance')
     os.system('rm -rf /var/lib/cloud/instances/*')
     os.system('rm -rf /var/lib/cloud/data/*')
     os.system('rm -rf /var/lib/cloud/sem/config_scripts_per_once.once')
     os.system('rm -rf /var/log/cloud-init.log')
     os.system('rm -rf /var/log/cloud-init-output.log')
+    print('\n\n\nDone!')
 
 install_packages()
 pip_down()
