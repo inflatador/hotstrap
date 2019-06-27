@@ -1,6 +1,5 @@
 #!/usr/bin/env python
 
-import sys
 import os
 import subprocess
 import shutil
@@ -31,11 +30,11 @@ def install_packages():
 # Install required packages via pip
 def pip_down():
     print('\nInstalling OpenStack HEAT requirements via pip')
-    os_list = [ 'os-collect-config',
-                'os-apply-config',
-                'os-refresh-config',
-                'dib-utils',
-                'gitpython' ]
+    os_list = ['os-collect-config',
+               'os-apply-config',
+               'os-refresh-config',
+               'dib-utils',
+               'gitpython']
     try:
         print('Installing decorator')
         os.system('pip install -U decorator >/dev/null')
@@ -63,13 +62,13 @@ def git_configuration():
 # Move configuration files to the proper location on the OS
 def configurate():
     file_list = ['etc/os-collect-config.conf',
-                  'opt/stack/os-config-refresh/configure.d/20-os-apply-config',
-                  'opt/stack/os-config-refresh/configure.d/55-heat-config',
-                  'usr/bin/heat-config-notify',
-                  'usr/libexec/os-apply-config/templates/etc/os-collect-config.conf',
-                  'usr/libexec/os-apply-config/templates/var/run/heat-config/heat-config',
-                  'var/lib/heat-config/hooks/ansible',
-                  'var/lib/heat-config/hooks/script' ]
+                 'opt/stack/os-config-refresh/configure.d/20-os-apply-config',
+                 'opt/stack/os-config-refresh/configure.d/55-heat-config',
+                 'usr/bin/heat-config-notify',
+                 'usr/libexec/os-apply-config/templates/etc/os-collect-config.conf',
+                 'usr/libexec/os-apply-config/templates/var/run/heat-config/heat-config',
+                 'var/lib/heat-config/hooks/ansible',
+                 'var/lib/heat-config/hooks/script']
     print('Moving configuration files to the proper locations\n\n')
     for file in file_list:
         directory = os.path.dirname('/' + file)
@@ -102,6 +101,7 @@ def delete_some_other_things():
     os.system('rm -rf /var/log/cloud-init.log')
     os.system('rm -rf /var/log/cloud-init-output.log')
     print('\n\n\nDone!')
+
 
 install_packages()
 pip_down()
