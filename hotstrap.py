@@ -48,7 +48,8 @@ def pip_down():
         print('Unsuccessful')
 
 
-# Remove git repo if it exist & clone it down again
+# Remove git repo if it exist
+# Clone git repo that has all our configuration files
 def git_configuration():
     import git
     try:
@@ -80,6 +81,7 @@ def configurate():
 
 # Run os-collect to propagate the config & run it again
 # Then run start_config to ensure everything is enabled properly
+# Also clean up the git repo cause it is dead to us
 def jiggle_some_things():
     print('\nRunning os-collect-config & ensuring os-collect-config-exist')
     os.system('os-collect-config --one-time --debug')
