@@ -1,4 +1,7 @@
 #!/usr/bin/env python
+# 6/27/2019
+# Author: Kevin McJunkin
+# Use away if this is somehow relevant to ya
 
 import os
 import subprocess
@@ -20,7 +23,7 @@ def install_packages():
     print('Installing packages')
     try:
         for package in package_list:
-            print('Installing + ' + package)
+            print('Installing ' + package)
             os.system('yum install -y ' + package + '>/dev/null')
             print('Successful\n')
     except:
@@ -48,7 +51,7 @@ def pip_down():
         print('Unsuccessful')
 
 
-# Remove git repo if it exist
+# Remove git repo if it exist (should never come up but might as well)
 # Clone git repo that has all our configuration files
 def git_configuration():
     import git
@@ -61,15 +64,18 @@ def git_configuration():
 
 
 # Move configuration files to the proper location on the OS
+# ...and use a really ghetto create directory for the move
+# chmod files properly
 def configurate():
-    file_list = ['etc/os-collect-config.conf',
-                 'opt/stack/os-config-refresh/configure.d/20-os-apply-config',
+    file_list = ['opt/stack/os-config-refresh/configure.d/20-os-apply-config',
                  'opt/stack/os-config-refresh/configure.d/55-heat-config',
                  'usr/bin/heat-config-notify',
-                 'usr/libexec/os-apply-config/templates/etc/os-collect-config.conf',
-                 'usr/libexec/os-apply-config/templates/var/run/heat-config/heat-config',
                  'var/lib/heat-config/hooks/ansible',
-                 'var/lib/heat-config/hooks/script']
+                 'var/lib/heat-config/hooks/script',
+                 'var/lib/heat-config/hooks/puppet',
+                 'etc/os-collect-config.conf',
+                 'usr/libexec/os-apply-config/templates/var/run/heat-config/heat-config',
+                 'usr/libexec/os-apply-config/templates/etc/os-collect-config.conf']
     print('Moving configuration files to the proper locations\n\n')
     for file in file_list:
         directory = os.path.dirname('/' + file)
@@ -77,10 +83,15 @@ def configurate():
             os.makedirs(directory)
         print('hotstrap/' + file + '\t->\t' + '/' + file)
         shutil.move('hotstrap/' + file, '/' + file)
+    for i in range(3):
+        os.chmod('/' + file_list[i], 0700)
+    for i in range(3, 6):
+        os.chmod('/' + file_list[i], 0755)
+        # os.chmod('/' + file, 0700)
 
 
 # Run os-collect to propagate the config & run it again
-# Then run start_config to ensure everything is enabled properly
+# Then run start_config to create/enable the os-collect service
 # Also clean up the git repo cause it is dead to us
 def jiggle_some_things():
     print('\nRunning os-collect-config & ensuring os-collect-config-exist')
