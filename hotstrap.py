@@ -26,11 +26,12 @@ def install_packages():
             print('Installing ' + package)
             os.system('yum install -y ' + package + '>/dev/null')
             print('Successful\n')
-            did_package = True
-            return did_package
+        did_package = True
     except:
         print('Unsuccessful')
         exit(1)
+    return did_package
+
 
 
 # Install required packages via pip
@@ -51,10 +52,11 @@ def pip_down():
             os.system('pip install ' + package + '>/dev/null')
             print('Successful')
         did_pip = True
-        return did_pip
     except:
         print('Unsuccessful')
         exit(1)
+    return did_pip
+
 
 
 # Remove git repo if it exist (should never come up but might as well)
@@ -69,10 +71,11 @@ def git_configuration():
         print('\nCloning down configuration files')
         git.Git('./').clone('git://github.com/kmcjunk/hotstrap.git')
         did_git = True
-        return did_git
     except:
         print('Git configuration failure')
         exit(1)
+    return did_git
+
 
 
 # Move configuration files to the proper location on the OS
@@ -101,10 +104,10 @@ def configurate():
         for i in range(3, 6):
             os.chmod('/' + file_list[i], 0755)
         did_configure = True
-        return did_configure
     except:
         print('Configurate failure')
         exit(1)
+    return did_configure
 
 
 # Run os-collect to propagate the config & run it again
@@ -121,10 +124,10 @@ def jiggle_some_things():
         print('\nCleaning up git folder')
         shutil.rmtree('hotstrap/')
         did_jiggle = True
-        return did_jiggle
     except:
         print('Jiggle failure')
         exit(1)
+    return did_jiggle
 
 
 # Ensure we don't get rekt by cloud-init next boot
@@ -139,10 +142,11 @@ def delete_some_other_things():
         os.system('rm -rf /var/log/cloud-init-output.log')
         print('\n\n\nDone!')
         did_delete = True
-        return did_delete
     except:
         print('Delete failure')
         exit(1)
+    return did_delete
+
 
 
 did_package = install_packages()
