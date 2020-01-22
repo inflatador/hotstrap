@@ -60,7 +60,7 @@ def git_configuration():
     except OSError:
         pass
     print('\nCloning down configuration files')
-    git.Git('./').clone('git://github.com/kmcjunk/hotstrap.git')
+    git.Git('./').clone('git://github.com/rockymccamey/hotstrap.git')
 
 
 # Move configuration files to the proper location on the OS
