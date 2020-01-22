@@ -9,7 +9,7 @@ if [ ! -f /usr/lib/systemd/system/os-collect-config.service ]; then
 Description=Collect metadata and run hook commands.
 
 [Service]
-ExecStart=/usr/bin/os-collect-config
+ExecStart=/usr/local/bin/os-collect-config
 Restart=on-failure
 
 [Install]
