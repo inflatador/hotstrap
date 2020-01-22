@@ -10,8 +10,7 @@ import shutil
 
 # Install required packages via yum
 def install_packages():
-    package_list = ['python'
-                    'python-pip',
+    package_list = ['python-pip',
                     'gcc',
                     'git',
                     'python-dev',
