@@ -13,18 +13,18 @@ def install_packages():
     package_list = ['python-pip',
                     'gcc',
                     'git',
-                    'python-devel',
-                    'libyaml-devel',
-                    'openssl-devel',
-                    'libffi-devel',
-                    'libxml2-devel',
-                    'libxslt-devel',
+                    'python-dev',
+                    'libyaml-dev',
+                    'libssl-dev',
+                    'libffi-dev',
+                    'libxml2-dev',
+                    'libxslt-dev',
                     'puppet']
     print('Installing packages')
     try:
         for package in package_list:
             print('Installing ' + package)
-            os.system('yum install -y ' + package + '>/dev/null')
+            os.system('apt-get install -y ' + package + '>/dev/null')
             print('Successful\n')
     except:
         print('Unsuccessful')
