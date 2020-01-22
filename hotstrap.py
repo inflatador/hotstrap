@@ -21,6 +21,7 @@ def install_packages():
                     'libxslt-dev',
                     'puppet']
     print('Installing packages')
+    os.system('apt-get update')
     try:
         for package in package_list:
             print('Installing ' + package)
