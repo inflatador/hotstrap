@@ -15,14 +15,14 @@ def install_packages():
                     'git',
                     'python-dev',
                     'libyaml-dev',
-                    'openssl-dev',
+                    'libssl-dev',
                     'libffi-dev',
                     'libxml2-dev',
                     'libxslt-dev',
                     'puppet']
     print('Installing packages')
     try:
-        os.system('apt-get update -y >dev/null' )
+        os.system('apt-get update' )
         for package in package_list:
             print('Installing ' + package)
             os.system('apt-get install -y ' + package + '>/dev/null')
