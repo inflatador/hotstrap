@@ -25,7 +25,7 @@ def install_packages():
         os.system('apt-get update -y >dev/null' )
         for package in package_list:
             print('Installing ' + package)
-            os.system('yum install -y ' + package + '>/dev/null')
+            os.system('apt-get install -y ' + package + '>/dev/null')
             print('Successful\n')
         did_package = True
     except:
