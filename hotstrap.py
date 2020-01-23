@@ -13,15 +13,16 @@ def install_packages():
     package_list = ['python-pip',
                     'gcc',
                     'git',
-                    'python-devel',
-                    'libyaml-devel',
-                    'openssl-devel',
-                    'libffi-devel',
-                    'libxml2-devel',
-                    'libxslt-devel',
+                    'python-dev',
+                    'libyaml-dev',
+                    'openssl-dev',
+                    'libffi-dev',
+                    'libxml2-dev',
+                    'libxslt-dev',
                     'puppet']
     print('Installing packages')
     try:
+        os.system('apt-get update -y >dev/null' )
         for package in package_list:
             print('Installing ' + package)
             os.system('yum install -y ' + package + '>/dev/null')
@@ -69,7 +70,7 @@ def git_configuration():
         except OSError:
             pass
         print('\nCloning down configuration files')
-        git.Git('./').clone('git://github.com/kmcjunk/hotstrap.git')
+        git.Git('./').clone('git://github.com/rockymccamey/hotstrap.git')
         did_git = True
     except:
         print('Git configuration failure')
