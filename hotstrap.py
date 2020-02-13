@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 # 6/27/2019
 # Author: Kevin McJunkin
 # Use away if this is somehow relevant to ya
