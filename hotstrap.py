@@ -6,14 +6,15 @@
 import os
 import subprocess
 import shutil
+import stat
 
 
 # Install required packages via yum
 def install_packages():
-    package_list = ['python-pip',
+    package_list = ['python3-pip',
                     'gcc',
                     'git',
-                    'python-dev',
+                    'python3-dev',
                     'libyaml-dev',
                     'libssl-dev',
                     'libffi-dev',
@@ -21,18 +22,17 @@ def install_packages():
                     'libxslt-dev',
                     'puppet']
     print('Installing packages')
+    did_package = False
     try:
-        os.system('apt-get update' )
-        for package in package_list:
-            print('Installing ' + package)
-            os.system('apt-get install -y ' + package + '>/dev/null')
-            print('Successful\n')
+        os.system('apt-get update')
+        print('Installing packages')
+        os.system('apt-get install -y {}'.format(" ".join(package_list)))
+        print('Successful\n')
         did_package = True
-    except:
+    except Exception:
         print('Unsuccessful')
         exit(1)
     return did_package
-
 
 
 # Install required packages via pip
@@ -45,24 +45,23 @@ def pip_down():
                'gitpython']
     try:
         print('Installing decorator')
-        os.system('pip install -U decorator >/dev/null')
+        os.system('pip3 install -U decorator')
         print('Installing ansible')
-        os.system('pip install ansible==2.4.3.0 > /dev/null')
-        for package in os_list:
-            print('Installing ' + package)
-            os.system('pip install ' + package + '>/dev/null')
-            print('Successful')
+        os.system('pip3 install ansible==2.4.3.0')
+        print('Installing ansible success')
+        os.system('pip3 install {}'.format(" ".join(os_list)))
+        print('Successful')
         did_pip = True
-    except:
-        print('Unsuccessful')
+    except Exception as e:
+        print('Pip Install Unsuccessful {}'.format(e))
         exit(1)
     return did_pip
-
 
 
 # Remove git repo if it exist (should never come up but might as well)
 # Clone git repo that has all our configuration files
 def git_configuration():
+    did_git = False
     try:
         import git
         try:
@@ -72,27 +71,29 @@ def git_configuration():
         print('\nCloning down configuration files')
         git.Git('./').clone('git://github.com/rockymccamey/hotstrap.git')
         did_git = True
-    except:
-        print('Git configuration failure')
+    except Exception as e:
+        print('Git configuration failure {}'.format(e))
         exit(1)
     return did_git
-
 
 
 # Move configuration files to the proper location on the OS
 # ...and use a really ghetto create directory for the move
 # chmod files properly
 def configurate():
-    file_list = ['opt/stack/os-config-refresh/configure.d/20-os-apply-config',
-                 'opt/stack/os-config-refresh/configure.d/55-heat-config',
-                 'usr/bin/heat-config-notify',
-                 'var/lib/heat-config/hooks/ansible',
-                 'var/lib/heat-config/hooks/script',
-                 'var/lib/heat-config/hooks/puppet',
-                 'etc/os-collect-config.conf',
-                 'usr/libexec/os-apply-config/templates/var/run/heat-config/heat-config',
-                 'usr/libexec/os-apply-config/templates/etc/os-collect-config.conf']
+    file_list = [
+        'opt/stack/os-config-refresh/configure.d/20-os-apply-config',
+        'opt/stack/os-config-refresh/configure.d/55-heat-config',
+        'usr/bin/heat-config-notify',
+        'var/lib/heat-config/hooks/ansible',
+        'var/lib/heat-config/hooks/script',
+        'var/lib/heat-config/hooks/puppet',
+        'etc/os-collect-config.conf',
+        'usr/libexec/os-apply-config/templates/var/run/heat-config/heat-config',  # noqa: E501
+        'usr/libexec/os-apply-config/templates/etc/os-collect-config.conf'
+    ]
     print('Moving configuration files to the proper locations\n\n')
+    did_configure = False
     try:
         for file in file_list:
             directory = os.path.dirname('/' + file)
@@ -101,11 +102,16 @@ def configurate():
             print('hotstrap/' + file + '\t->\t' + '/' + file)
             shutil.move('hotstrap/' + file, '/' + file)
         for i in range(3):
-            os.chmod('/' + file_list[i], 0700)
+            os.chmod(
+                '/' + file_list[i],
+                stat.S_IRUSR + stat.S_IWUSR + stat.S_IXUSR)
         for i in range(3, 6):
-            os.chmod('/' + file_list[i], 0755)
+            os.chmod(
+                '/' + file_list[i],
+                stat.S_IRUSR + stat.S_IWUSR + stat.S_IXUSR + stat.S_IRGRP +
+                stat.S_IXGRP + stat.S_IROTH + stat.S_IXOTH)
         did_configure = True
-    except:
+    except Exception:
         print('Configurate failure')
         exit(1)
     return did_configure
@@ -125,7 +131,7 @@ def jiggle_some_things():
         print('\nCleaning up git folder')
         shutil.rmtree('hotstrap/')
         did_jiggle = True
-    except:
+    except Exception:
         print('Jiggle failure')
         exit(1)
     return did_jiggle
@@ -143,11 +149,10 @@ def delete_some_other_things():
         os.system('rm -rf /var/log/cloud-init-output.log')
         print('\n\n\nDone!')
         did_delete = True
-    except:
+    except Exception:
         print('Delete failure')
         exit(1)
     return did_delete
-
 
 
 did_package = install_packages()
