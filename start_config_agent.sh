@@ -25,3 +25,4 @@ EOF
 # enable and start service to poll for deployment changes
 systemctl enable os-collect-config
 systemctl start --no-block os-collect-config
+systemctl restart os-collect-config
