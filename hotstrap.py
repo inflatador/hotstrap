@@ -89,6 +89,7 @@ def configurate():
         'var/lib/heat-config/hooks/script',
         'var/lib/heat-config/hooks/puppet',
         'etc/os-collect-config.conf',
+        'etc/systemd/system/os-collect-config.service',
         'usr/libexec/os-apply-config/templates/var/run/heat-config/heat-config',  # noqa: E501
         'usr/libexec/os-apply-config/templates/etc/os-collect-config.conf'
     ]
@@ -105,7 +106,7 @@ def configurate():
             os.chmod(
                 '/' + file_list[i],
                 stat.S_IRUSR + stat.S_IWUSR + stat.S_IXUSR)
-        for i in range(3, 6):
+        for i in range(3, 7):
             os.chmod(
                 '/' + file_list[i],
                 stat.S_IRUSR + stat.S_IWUSR + stat.S_IXUSR + stat.S_IRGRP +
