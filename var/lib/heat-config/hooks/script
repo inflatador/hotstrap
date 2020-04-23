@@ -92,7 +92,7 @@ def main(argv=sys.argv):
 
 # changed for python3
 
-    json.dump(str(response.decode('utf-8'), sys.stdout)
+    json.dump(response.encode('utf-8'), sys.stdout))
 
 if __name__ == '__main__':
     sys.exit(main(sys.argv))
