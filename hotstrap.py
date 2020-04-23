@@ -42,7 +42,7 @@ def pip_down():
                'os-apply-config',
                'os-refresh-config',
                'dib-utils',
-               'gitpython']
+               'GitPython']
     try:
         print('Installing decorator')
         os.system('pip3 install -U decorator')
@@ -124,9 +124,9 @@ def configurate():
 def jiggle_some_things():
     try:
         print('\nRunning os-collect-config & ensuring os-collect-config-exist')
-        os.system('os-collect-config --one-time --debug')
+        os.system('/usr/local/bin/os-collect-config --one-time --debug')
         os.system('cat /etc/os-collect-config.conf')
-        os.system('os-collect-config --one-time --debug')
+        os.system('/usr/local/bin/os-collect-config --one-time --debug')
         print('\nEnsuring everything is running & enabled on boot')
         subprocess.call('hotstrap/start_config_agent.sh')
         print('\nCleaning up git folder')

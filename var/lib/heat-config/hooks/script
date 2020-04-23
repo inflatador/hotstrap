@@ -90,7 +90,9 @@ def main(argv=sys.argv):
         'deploy_status_code': subproc.returncode,
     })
 
-    json.dump(str(response), sys.stdout)
+# changed for python3
+
+    json.dump(str(response.decode('utf-8'), sys.stdout)
 
 if __name__ == '__main__':
     sys.exit(main(sys.argv))
