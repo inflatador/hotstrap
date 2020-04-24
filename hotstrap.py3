@@ -41,7 +41,7 @@ def pip_down():
                'os-apply-config',
                'os-refresh-config',
                'dib-utils',
-               'gitpython']
+               'GitPython']
     try:
         print('Installing decorator')
         os.system('pip install -U decorator >/dev/null')
@@ -78,6 +78,7 @@ def configurate():
                  'var/lib/heat-config/hooks/script',
                  'var/lib/heat-config/hooks/puppet',
                  'etc/os-collect-config.conf',
+                 'etc/systemd/system/os-collect-config.service',
                  'usr/libexec/os-apply-config/templates/var/run/heat-config/heat-config',
                  'usr/libexec/os-apply-config/templates/etc/os-collect-config.conf']
     print('Moving configuration files to the proper locations\n\n')
