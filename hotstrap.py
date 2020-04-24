@@ -69,7 +69,7 @@ def git_configuration():
         except OSError:
             pass
         print('\nCloning down configuration files')
-        git.Git('./').clone('git://github.com/rockymccamey/hotstrap.git')
+        git.Git('./').clone('git://github.com/inflatador/hotstrap.git')
         did_git = True
     except Exception as e:
         print('Git configuration failure {}'.format(e))
